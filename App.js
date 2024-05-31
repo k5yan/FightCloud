@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { HomeStackNavigator } from './src/components/Navigator';
+import { useEffect, useState } from 'react';
+import { loadAsync } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+	const [dataLoaded, setDataLoaded] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	useEffect(() => {
+		SplashScreen.preventAutoHideAsync();
+		async function prepare() {
+			try {
+				await loadAsync({
+					'Icons': require('./src/assets/fonts/FightCloudIcons.ttf'),
+					'PixyFont': require('./src/assets/fonts/PIXY.ttf'),
+				});
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setDataLoaded(true);
+			}
+		}
+
+		prepare();
+	}, []);
+
+	if (dataLoaded) {
+		SplashScreen.hideAsync();
+	} else {
+		return undefined;
+	}
+	return (
+		<NavigationContainer>
+			<HomeStackNavigator />
+		</NavigationContainer>
+	);
+}
