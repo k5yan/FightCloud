@@ -8,11 +8,15 @@ export const CharFrame = (props) => {
 	return (
 		<View>
 			<View style={styles.charFrameContainer}>
-				<Image
-					style={styles.charFrameImage}
-					source={imagePath[nameTitle]}
-				></Image>
-				<Text style={styles.charFrameTitle}>{nameTitle}</Text>
+				<View style={styles.smallBorderContainer}>
+					<View style={styles.volumeBorder}>
+						<Image
+							style={styles.charFrameImage}
+							source={imagePath[nameTitle]}
+						></Image>
+						<Text style={styles.charFrameTitle}>{nameTitle}</Text>
+					</View>
+				</View>
 			</View>
 			<View style={styles.volume}></View>
 		</View>
@@ -21,14 +25,13 @@ export const CharFrame = (props) => {
 
 const styles = ScaledSheet.create({
 	charFrameImage: {
-		borderRadius: 10,
 		width: '100%',
 		height: '100%',
 		borderWidth: 1,
 		borderColor: 'rgba(0,0,0,0.1)',
+		borderBottomLeftRadius: 6,
 	},
-	charFrameImageContainer: {
-		position: 'absolute',
+	smallBorderContainer: {
 		width: '100%',
 		height: '100%',
 		borderWidth: 1,
@@ -37,6 +40,20 @@ const styles = ScaledSheet.create({
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
 		borderColor: 'rgba(0,0,0,0.1)',
+		justifyContent: 'center',
+		alignItems: 'center',
+		overflow: 'hidden',
+	},
+	volumeBorder: {
+		position: 'absolute',
+		width: '100%',
+		height: '100%',
+		borderBottomWidth: 4,
+		borderLeftWidth: 4,
+		borderBottomLeftRadius: 10,
+		borderBottomRightRadius: 10,
+		borderTopLeftRadius: 10,
+		borderColor: '#F8F4FF',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
@@ -66,14 +83,14 @@ const styles = ScaledSheet.create({
 	},
 	volume: {
 		position: 'absolute',
-		backgroundColor: 'transparent',
-		borderWidth: 8,
-		borderColor: '#F8F4FF',
+		backgroundColor: '#F8F4FF',
+		borderWidth: 1,
+		borderColor: 'rgba(0,0,0,0.1)',
 		borderBottomLeftRadius: 18,
 		borderBottomRightRadius: 18,
 		borderTopLeftRadius: 18,
 		borderTopRightRadius: 18,
-		width: '150@s',
+		width: '151@s',
 		height: '150@s',
 		top: 4,
 		right: 4,
