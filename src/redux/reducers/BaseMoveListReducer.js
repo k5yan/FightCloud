@@ -1,6 +1,6 @@
 export const dataBaseInitialState = {};
 
-export const dataBaseReducer = (state = dataBaseInitialState, action) => {
+export const BaseMoveListReducer = (state = dataBaseInitialState, action) => {
 	switch (action.type) {
 		case 'A': {
 		}

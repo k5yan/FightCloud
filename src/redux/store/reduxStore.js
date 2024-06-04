@@ -1,8 +1,17 @@
 import { thunk } from 'redux-thunk';
-import { combineReducers, createStore, applyMiddleware} from 'redux';
-import { dataBaseReducer } from '../reducers/dataBaseReducer';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import {
+	BaseMoveListReducer,
+	CustomMoveListReducer,
+	ProfileInfoReducer,
+	ProfileStylesReducer,
+	StylesReducer,
+} from '../reducers';
 
 const reducer = combineReducers({
-	dataBase: dataBaseReducer,
-	styles:
+	baseMoveList: BaseMoveListReducer,
+	customMoveList: CustomMoveListReducer,
+	profileInfo: ProfileInfoReducer,
+	profileStyles: ProfileStylesReducer,
+	styles: StylesReducer,
 });
