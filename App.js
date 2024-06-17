@@ -14,6 +14,7 @@ export default function App() {
 				await loadAsync({
 					'Icons': require('./src/assets/fonts/FightCloudIcons.ttf'),
 					'PixyFont': require('./src/assets/fonts/PIXY.ttf'),
+					'Test': require('./src/assets/fonts/Icomoon.ttf'),
 				});
 			} catch (error) {
 				console.log(error);

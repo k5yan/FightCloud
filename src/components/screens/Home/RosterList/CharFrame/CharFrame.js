@@ -1,25 +1,21 @@
-import { Text, View, Image } from 'react-native';
-import { imagePath } from '../../../../../constants/imagePath';
+import { Text, View, Image, Animated } from 'react-native';
+import { charFrameImagePath } from '../../../../../constants/imagePath/charFrameImagePath';
 import { ScaledSheet } from 'react-native-size-matters';
+import { TouchableOpacity, RectButton } from 'react-native-gesture-handler';
 
 export const CharFrame = (props) => {
 	const nameTitle = props.nameTitle;
 
 	return (
-		<View>
+		<RectButton rippleColor={'transparent'}>
 			<View style={styles.charFrameContainer}>
-				<View style={styles.smallBorderContainer}>
-					<View style={styles.volumeBorder}>
-						<Image
-							style={styles.charFrameImage}
-							source={imagePath[nameTitle]}
-						></Image>
-						<Text style={styles.charFrameTitle}>{nameTitle}</Text>
-					</View>
-				</View>
+				<Image
+					style={styles.charFrameImage}
+					source={charFrameImagePath[nameTitle]}
+				></Image>
+				<Text style={styles.charFrameTitle}>{nameTitle}</Text>
 			</View>
-			<View style={styles.volume}></View>
-		</View>
+		</RectButton>
 	);
 };
 
@@ -29,34 +25,9 @@ const styles = ScaledSheet.create({
 		height: '100%',
 		borderWidth: 1,
 		borderColor: 'rgba(0,0,0,0.1)',
-		borderBottomLeftRadius: 6,
+		borderRadius: 10,
 	},
-	smallBorderContainer: {
-		width: '100%',
-		height: '100%',
-		borderWidth: 1,
-		borderBottomLeftRadius: 10,
-		borderBottomRightRadius: 10,
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10,
-		borderColor: 'rgba(0,0,0,0.1)',
-		justifyContent: 'center',
-		alignItems: 'center',
-		overflow: 'hidden',
-	},
-	volumeBorder: {
-		position: 'absolute',
-		width: '100%',
-		height: '100%',
-		borderBottomWidth: 4,
-		borderLeftWidth: 4,
-		borderBottomLeftRadius: 10,
-		borderBottomRightRadius: 10,
-		borderTopLeftRadius: 10,
-		borderColor: '#F8F4FF',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
+
 	charFrameTitle: {
 		fontFamily: 'PixyFont',
 		fontSize: '20@s',
@@ -80,20 +51,5 @@ const styles = ScaledSheet.create({
 		borderTopRightRadius: 18,
 		justifyContent: 'center',
 		alignItems: 'center',
-	},
-	volume: {
-		position: 'absolute',
-		backgroundColor: '#F8F4FF',
-		borderWidth: 1,
-		borderColor: 'rgba(0,0,0,0.1)',
-		borderBottomLeftRadius: 18,
-		borderBottomRightRadius: 18,
-		borderTopLeftRadius: 18,
-		borderTopRightRadius: 18,
-		width: '151@s',
-		height: '150@s',
-		top: 4,
-		right: 4,
-		zIndex: -1,
 	},
 });

@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 
-export const AppTitle = () => {
+export const AppTitle = (props) => {
 	return (
 		<View style={styles.titleContainer}>
-			<Text style={styles.title}>FIGHTCLOUD</Text>
+			<Text style={styles.title}>{props.title}</Text>
 		</View>
 	);
 };

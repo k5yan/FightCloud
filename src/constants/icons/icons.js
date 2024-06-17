@@ -1,6 +1,7 @@
 export const ACTION_BUTTON_SETTINGS = '&#xe905;';
 export const ACTION_BUTTON_HELP = '&#xe902;';
 export const ACTION_BUTTON_BURGER = '&#xe903;';
+export const ACTION_BUTTON_MEATBALLS = '&#xe907;';
 export const NAVBAR_BUTTON_ROSTER = '&#xe900;';
 export const NAVBAR_BUTTON_PROFILE = '&#xe904;';
 export const NAVBAR_BUTTON_DISCOVER = '&#xe906;';

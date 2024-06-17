@@ -21,5 +21,6 @@ const styles = ScaledSheet.create({
 		alignItems: 'center',
 		flexWrap: 'wrap',
 		overflow: 'visible',
+		marginTop: '8@s',
 	},
 });

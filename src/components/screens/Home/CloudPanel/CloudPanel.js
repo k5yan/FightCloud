@@ -1,7 +1,7 @@
 import { ImageBackground, View } from 'react-native';
-import { ActionButton } from '../../baseComponents/ActionButton';
+import { ActionButton } from '../../../baseComponents/ActionButton';
 import { SearchBar } from './SearchBar';
-import { AppTitle } from './AppTitle';
+import { AppTitle } from '../../../baseComponents/AppTitle';
 import { ScaledSheet } from 'react-native-size-matters';
 
 import {
@@ -13,22 +13,16 @@ import {
 export const CloudPanel = () => {
 	return (
 		<View style={styles.container}>
-			<AppTitle />
+			<AppTitle title={'fightcloud'} />
 			<ImageBackground
-				source={require('../../../../image/CloudBarBackground2.png')}
+				source={require('../../../../image/HomeScreen/CloudBarBackground.png')}
 				resizeMode="cover"
 				style={styles.cloudBackgroundImage}
 			>
 				<View style={styles.cloudPanel}>
-					<ActionButton
-						icon={ACTION_BUTTON_BURGER}
-						iconColor={HOME_BUTTON_COLOR}
-					/>
+					<ActionButton icon={ACTION_BUTTON_BURGER} color={HOME_BUTTON_COLOR} />
 					<SearchBar />
-					<ActionButton
-						icon={ACTION_BUTTON_HELP}
-						iconColor={HOME_BUTTON_COLOR}
-					/>
+					<ActionButton icon={ACTION_BUTTON_HELP} color={HOME_BUTTON_COLOR} />
 				</View>
 			</ImageBackground>
 		</View>
@@ -40,7 +34,7 @@ const styles = ScaledSheet.create({
 		paddingBottom: '5@s',
 		borderBottomColor: 'rgba(0, 0, 0, 0.1)',
 		borderBottomWidth: 2,
-		backgroundColor: 'rgb(15, 187, 232)',
+		backgroundColor: '#0FBBE8',
 	},
 	cloudPanel: {
 		flex: 1,
@@ -48,6 +42,7 @@ const styles = ScaledSheet.create({
 		justifyContent: 'space-between',
 		marginTop: '47@s',
 		marginBottom: '20@s',
+		paddingHorizontal: '2@s',
 	},
 	cloudBackgroundImage: {
 		flexDirection: 'row',
