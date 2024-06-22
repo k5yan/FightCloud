@@ -1,10 +1,11 @@
-import { View, Image, Text, Animated } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { ActionButton } from '../../baseComponents/ActionButton';
 import { ACTION_BUTTON_SETTINGS, PROFILE_BUTTON_COLOR } from '../../../constants/icons';
 import { profileImagePath } from '../../../constants/imagePath/profileImagePath';
 import { TabSelector } from '../../baseComponents/TabSelector';
 import { PublicationsList } from '../../baseComponents/PublicationsList/PublicationsList';
+import { ProfileHeader } from './ProfileHeader/ProfileHeader';
 
 export const Profile = () => {
 	const profileColorPalette = {
@@ -27,35 +28,19 @@ export const Profile = () => {
 		},
 	];
 
+	const profileInfo = {
+		nickname: 'k5yan',
+		title: 'platform: PC yoshimitsu player',
+	};
+
 	return (
 		<View style={styles.profileContainer}>
 			<View style={styles.profileInfo}>
-				<View style={styles.profileHeader}>
-					<View style={styles.playerContainer}>
-						<View style={styles.profilePictureContainer}>
-							<Image
-								source={profileImagePath}
-								style={styles.profilePicture}
-							></Image>
-						</View>
-						<View style={styles.infoBox}>
-							<View style={styles.profileTitleContainer}>
-								<Text style={styles.profileTitle}>
-									{'platform: PC yoshimitsu player'}
-								</Text>
-							</View>
-							<View style={styles.profileNicknameContainer}>
-								<Text style={styles.profileNickname}>{'k5yan'}</Text>
-							</View>
-						</View>
-					</View>
-					<View style={styles.profileButtonContainer}>
-						<ActionButton
-							icon={ACTION_BUTTON_SETTINGS}
-							color={PROFILE_BUTTON_COLOR}
-						/>
-					</View>
-				</View>
+				<ProfileHeader
+					colorPalette={profileColorPalette}
+					profileImagePath={profileImagePath}
+					profileInfo={profileInfo}
+				/>
 			</View>
 			<View style={styles.contentPicker}>
 				<TabSelector
