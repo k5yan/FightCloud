@@ -1,17 +1,21 @@
-import { thunk } from 'redux-thunk';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import {
-	BaseMoveListReducer,
-	CustomMoveListReducer,
-	ProfileInfoReducer,
-	ProfileStylesReducer,
-	StylesReducer,
-} from '../reducers';
-
-const reducer = combineReducers({
-	baseMoveList: BaseMoveListReducer,
-	customMoveList: CustomMoveListReducer,
-	profileInfo: ProfileInfoReducer,
-	profileStyles: ProfileStylesReducer,
-	styles: StylesReducer,
+	persistStore,
+	FLUSH,
+	REHYDRATE,
+	PAUSE,
+	PERSIST,
+	PURGE,
+	REGISTER,
+} from 'redux-persist';
+import { globalReducer } from '../reducer/globalReducer';
+export const store = configureStore({
+	reducer: globalReducer,
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: {
+				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+			},
+		}),
 });
+export const persistedStore = persistStore(store);

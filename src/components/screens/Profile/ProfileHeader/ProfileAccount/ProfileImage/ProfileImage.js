@@ -1,13 +1,21 @@
 import { View, Image } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
+import { useSelector } from 'react-redux';
+import {
+	selectColorPalette,
+	selectImageStyles,
+} from '../../../../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
 
 export const ProfileImage = (props) => {
+	const colorPalette = useSelector(selectColorPalette);
+	const imageStyles = useSelector(selectImageStyles);
+	const styles = ScaledSheet.create(imageStyles);
 	return (
 		<View
 			style={[
 				{
-					backgroundColor: props.colorPalette.gamma,
-					borderColor: props.colorPalette.gamma,
+					backgroundColor: colorPalette.gamma,
+					borderColor: colorPalette.gamma,
 				},
 				styles.profilePictureContainer,
 			]}
@@ -16,21 +24,3 @@ export const ProfileImage = (props) => {
 		</View>
 	);
 };
-
-const styles = ScaledSheet.create({
-	profilePictureContainer: {
-		// backgroundColor: 'white',
-		width: '96@s',
-		height: '96@s',
-		borderWidth: '5@s',
-		borderRadius: 10,
-		// borderColor: 'white',
-		justifyContent: 'center',
-		alignItems: 'cecnter',
-	},
-	profilePicture: {
-		width: '100%',
-		height: '100%',
-		borderRadius: 6,
-	},
-});

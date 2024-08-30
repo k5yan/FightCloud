@@ -1,45 +1,60 @@
 import * as HTML_Entity from 'he';
-import { TouchableOpacity, Animated } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { ScaledSheet } from 'react-native-size-matters';
 import { Animations } from '../Animations';
 
 export const ActionButton = (props) => {
-	const startAnimationValue = new Animated.Value(1);
 	const Animation = Animations();
 
-	const defaultType = props.type === 'TabBarButton' ? false : true;
-	const focused = defaultType ? false : props.accessibilityState.selected;
-	const icon = HTML_Entity.decode(props.icon);
+	const buttonType = props.type || 'default';
+	const focused =
+		buttonType === 'tabBarButton' ? props.accessibilityState.selected : false;
+	const label = HTML_Entity.decode(props.icon);
 
-	const iconColor = defaultType
-		? props.color
-		: focused
-		? props.color.focused
-		: props.color.unfocused;
+	const touchableOpacityStyle = {
+		default: styles.defaultButtonContainer,
+		tabBarButton: styles.navBarButtonContainer,
+		submitButton: styles.submitButtonContainer,
+	};
+
+	const textStyle = {
+		default: styles.defaultIcon,
+		tabBarButton: styles.navBarIcon,
+		submitButton: styles.defaultIcon,
+	};
+
+	const labelColor =
+		buttonType === 'tabBarButton'
+			? focused
+				? props.color.focused
+				: props.color.unfocused
+			: props.color;
 
 	return (
 		<TouchableOpacity
-			style={
-				defaultType ? styles.defaultButtonContainer : styles.navBarButtonContainer
-			}
+			style={touchableOpacityStyle[buttonType]}
 			onPressIn={props.onPress}
-			onPress={() => Animation.grow(startAnimationValue, 1.2)}
-			onPressOut={() =>
-				setTimeout(() => Animation.decrease(startAnimationValue, 1), 260)
-			}
+			onPress={() => {
+				Animation[props.animation].onPress();
+			}}
+			onPressOut={() => {
+				Animation[props.animation].onPressOut();
+			}}
 			disabled={focused}
 			activeOpacity={1}
 		>
 			<Animated.Text
 				style={[
-					defaultType ? styles.defaultIcon : styles.navBarIcon,
+					textStyle[buttonType],
 					{
-						color: iconColor,
-						transform: [{ scale: startAnimationValue }],
+						color: labelColor,
+						fontFamily: props.font,
 					},
+					Animation[props.animation].style,
 				]}
 			>
-				{icon}
+				{label}
 			</Animated.Text>
 		</TouchableOpacity>
 	);
@@ -56,11 +71,6 @@ let styles = ScaledSheet.create({
 		fontFamily: 'Icons',
 		marginVertical: '8@vs',
 	},
-	navBarIconT: {
-		fontSize: '25@s',
-		fontFamily: 'Test',
-		marginVertical: '8@vs',
-	},
 	defaultButtonContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -68,5 +78,25 @@ let styles = ScaledSheet.create({
 	defaultIcon: {
 		fontSize: '25@s',
 		fontFamily: 'Icons',
+	},
+	submitButtonContainer: {
+		backgroundColor: '#2F2F2F',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderWidth: 2,
+		borderColor: '#2F2F2F',
+		borderRadius: 6,
+		paddingVertical: '3@s',
+		marginVertical: '2@s',
+		marginHorizontal: '60@s',
+	},
+	navBarIconT: {
+		fontSize: '25@s',
+		fontFamily: 'Test',
+		marginVertical: '8@vs',
+	},
+	defaultIconT: {
+		fontSize: '25@s',
+		fontFamily: 'Test',
 	},
 });

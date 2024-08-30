@@ -1,50 +1,32 @@
 import { View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
-import { ActionButton } from '../../../baseComponents/ActionButton';
 import { ProfileAccount } from './ProfileAccount/ProfileAccount';
+
 import {
-	ACTION_BUTTON_SETTINGS,
-	PROFILE_BUTTON_COLOR,
-} from '../../../../constants/icons';
+	selectColorPalette,
+	selectHeaderStyles,
+} from '../../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
+import { useSelector } from 'react-redux';
 
 export const ProfileHeader = (props) => {
+	const headerStyles = useSelector(selectHeaderStyles);
+	const colorPalette = useSelector(selectColorPalette);
+
+	const styles = ScaledSheet.create(headerStyles);
 	return (
 		<View
 			style={[
 				{
-					backgroundColor: props.colorPalette.alpha,
-					borderColor: props.colorPalette.alpha,
+					backgroundColor: colorPalette.alpha,
+					borderColor: colorPalette.alpha,
 				},
 				styles.profileHeader,
 			]}
 		>
 			<ProfileAccount
-				colorPalette={props.colorPalette}
 				profileImagePath={props.profileImagePath}
 				profileInfo={props.profileInfo}
 			/>
-			<View style={styles.profileButtonContainer}>
-				<ActionButton
-					icon={ACTION_BUTTON_SETTINGS}
-					color={PROFILE_BUTTON_COLOR}
-				/>
-			</View>
 		</View>
 	);
 };
-
-const styles = ScaledSheet.create({
-	profileHeader: {
-		// backgroundColor: '#008080',
-		borderWidth: '4@s',
-		borderBottomLeftRadius: 20,
-		borderBottomRightRadius: 20,
-		// borderColor: '#008080',
-		flexDirection: 'row',
-		alignItems: 'flex-start',
-		justifyContent: 'space-between',
-		paddingTop: '36@s',
-		paddingBottom: '12@s',
-		paddingHorizontal: '12@s',
-	},
-});

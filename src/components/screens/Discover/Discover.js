@@ -1,34 +1,71 @@
-import { View, Image, Picker, Text, TextInput } from 'react-native';
+import { View } from 'react-native';
+import { useEffect } from 'react';
 import { ScaledSheet } from 'react-native-size-matters';
-import { SearchBar } from './SearchBar';
+import { request } from '../../../utils/serverCalls/request';
 import { TabSelector } from '../../baseComponents/TabSelector';
 import { PublicationsList } from '../../baseComponents/PublicationsList/PublicationsList';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	selectMainScreenStyles,
+	selectColorPalette,
+} from '../../../redux/selectors/styles/DiscoverSelectors/DiscoverSelectors';
+import { AppTitle } from '../../baseComponents/AppTitle';
+import { DiscoverHeader } from './DiscoverHeader/DiscoverHeader';
+import { selectProfileInfo } from '../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
+import { selectAllPublications } from '../../../redux/selectors/data/DiscoverSelectors/DiscoverSelectors';
 
 export const Discover = () => {
-	const discoverColorPalette = {
-		alpha: '#088EA4', //фон
-		beta: '#035A6B', //фон публикаций
-		gamma: 'white', //текст, кнопки
-		delta: '#00353F', //фон никнейма автора
-	};
+	const colorPalette = useSelector(selectColorPalette);
+	const mainScreen = useSelector(selectMainScreenStyles);
+	const isLogin = useSelector(selectProfileInfo).isLogin;
+	const content = useSelector(selectAllPublications);
+	const dispatch = useDispatch();
+
+	// console.log(content);
+	useEffect(() => {
+		async function start() {
+			const publications = await request('/publications', 'GET');
+			dispatch({
+				type: 'DOWNLOAD_ALL_PUBLICATIONS',
+				payload: publications.data.publications,
+			});
+			console.log(publications.data.publications);
+		}
+		start();
+	}, []);
 
 	const PublicationsGlobal = () => (
-		<PublicationsList colorPalette={discoverColorPalette} />
+		<View style={{ backgroundColor: colorPalette.alpha, flex: 1 }}>
+			<PublicationsList colorPalette={colorPalette} publications={content} />
+		</View>
 	);
 	const PublicationsFollowed = () => (
-		<PublicationsList colorPalette={discoverColorPalette} />
+		<View style={{ backgroundColor: colorPalette.alpha, flex: 1 }}>
+			<PublicationsList colorPalette={colorPalette} publications={content} />
+		</View>
 	);
 	const PublicationsRecomendations = () => (
-		<PublicationsList colorPalette={discoverColorPalette} />
+		<View style={{ backgroundColor: colorPalette.alpha, flex: 1 }}>
+			<PublicationsList colorPalette={colorPalette} publications={content} />
+		</View>
 	);
-	const screens = [
+
+	const userScreens = [
 		{
 			name: 'global',
 			component: PublicationsGlobal,
 		},
+		{ name: 'subs', component: PublicationsFollowed },
 		{
-			name: 'subs',
-			component: PublicationsFollowed,
+			name: 'popular',
+			component: PublicationsRecomendations,
+		},
+	];
+
+	const guestScreens = [
+		{
+			name: 'global',
+			component: PublicationsGlobal,
 		},
 		{
 			name: 'popular',
@@ -36,47 +73,18 @@ export const Discover = () => {
 		},
 	];
 
+	const styles = ScaledSheet.create(mainScreen);
+
 	return (
 		<View style={styles.discoverContainer}>
-			<View style={styles.titleContainer}>
-				<Text style={styles.title}>{'Discover'}</Text>
+			<AppTitle title={'discover'} />
+			<DiscoverHeader />
+			<View style={{ backgroundColor: colorPalette.alpha, flex: 1 }}>
+				<TabSelector
+					screen={'Discover'}
+					screens={isLogin ? userScreens : guestScreens}
+				/>
 			</View>
-			<SearchBar colorPalette={discoverColorPalette} />
-			<TabSelector
-				backgroundColor={discoverColorPalette.beta}
-				labelColor={{
-					focused: discoverColorPalette.gamma,
-					unfocused: discoverColorPalette.delta,
-				}}
-				screens={screens}
-			/>
 		</View>
 	);
 };
-
-const styles = ScaledSheet.create({
-	discoverContainer: {
-		flex: 1,
-		backgroundColor: '#088ea4',
-	},
-	titleContainer: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: '30@s',
-	},
-	title: {
-		fontFamily: 'PixyFont',
-		fontSize: '25@s',
-		color: '#fff',
-	},
-	searchBarContainer: {
-		height: '38@s',
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'lime',
-		marginHorizontal: '16@s',
-		marginVertical: '12@s',
-		borderRadius: 10,
-	},
-	searchBar: {},
-});

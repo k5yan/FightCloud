@@ -2,12 +2,12 @@ import { Text } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 
 export const TabLabel = (props) => {
-	const iconColor = props.focused ? props.color.focused : props.color.unfocused;
+	const iconColor = props.focused ? props.colorPalette.gamma : props.colorPalette.delta;
 
 	return (
 		<Text
 			style={[
-				styles.navBarIcon,
+				styles.tabLabel,
 				{
 					color: iconColor,
 				},
@@ -19,7 +19,7 @@ export const TabLabel = (props) => {
 };
 
 const styles = ScaledSheet.create({
-	navBarIcon: {
+	tabLabel: {
 		fontSize: '20@s',
 		fontFamily: 'PixyFont',
 	},

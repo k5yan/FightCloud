@@ -1,20 +1,23 @@
 import { View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { AuthorInfo } from './AuthorInfo';
-import { ActionButton } from '../../../ActionButton';
-import { ACTION_BUTTON_MEATBALLS } from '../../../../../constants/icons';
+import { PublicationDropDown } from './PublicationDropDown/PublicationDropDown';
+import Animated, { Easing, LinearTransition } from 'react-native-reanimated';
 
 export const PublicationHeader = (props) => {
 	return (
-		<View style={styles.publicationHeaderContainer}>
+		<Animated.View
+			layout={LinearTransition}
+			style={styles.publicationHeaderContainer}
+		>
 			<AuthorInfo author={props.author} colorPalette={props.colorPalette} />
-			<View style={styles.publicationButtonContainer}>
-				<ActionButton
-					icon={ACTION_BUTTON_MEATBALLS}
-					color={props.colorPalette.gamma}
-				/>
-			</View>
-		</View>
+			<PublicationDropDown
+				edit={props.edit}
+				colorPalette={props.colorPalette}
+				id={props.id}
+				author={props.author.nickname}
+			/>
+		</Animated.View>
 	);
 };
 
@@ -23,8 +26,5 @@ const styles = ScaledSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
-	},
-	publicationButtonContainer: {
-		marginRight: '6@s',
 	},
 });

@@ -1,8 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { HomeStackNavigator } from './src/components/Navigator';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { loadAsync } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { Provider } from 'react-redux';
+import { store, persistedStore } from './src/redux/store/reduxStore';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default function App() {
 	const [dataLoaded, setDataLoaded] = useState(false);
@@ -14,10 +18,10 @@ export default function App() {
 				await loadAsync({
 					'Icons': require('./src/assets/fonts/FightCloudIcons.ttf'),
 					'PixyFont': require('./src/assets/fonts/PIXY.ttf'),
-					'Test': require('./src/assets/fonts/Icomoon.ttf'),
+					'Test': require('./src/assets/fonts/icons2.ttf'),
 				});
 			} catch (error) {
-				console.log(error);
+				console.log('fontsLoad: ', error);
 			} finally {
 				setDataLoaded(true);
 			}
@@ -32,8 +36,12 @@ export default function App() {
 		return undefined;
 	}
 	return (
-		<NavigationContainer>
-			<HomeStackNavigator />
-		</NavigationContainer>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistedStore}>
+				<NavigationContainer>
+					<HomeStackNavigator />
+				</NavigationContainer>
+			</PersistGate>
+		</Provider>
 	);
 }

@@ -26,13 +26,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-	 "plugins": [
+    "plugins": [
       [
         "expo-font",
         {
-          "fonts": ["./src/assets/fonts/icons.ttf"]
+          "fonts": [
+            "./src/assets/fonts/icons.ttf"
+          ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }

@@ -1,3 +1,3 @@
-export * from './Home';
+export * from './Main';
 export * from './Profile';
 export * from './Discover';

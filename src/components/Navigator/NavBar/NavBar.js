@@ -1,18 +1,40 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ScaledSheet } from 'react-native-size-matters';
-import { Home, Profile, Discover } from '../../screens';
+import { Main, Profile, Discover } from '../../screens';
 import { ActionButton } from '../../baseComponents/ActionButton';
 import {
 	NAVBAR_BUTTON_ROSTER,
 	NAVBAR_BUTTON_DISCOVER,
 	NAVBAR_BUTTON_PROFILE,
 } from '../../../constants/icons';
-
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { request } from '../../../utils/serverCalls/request';
+import { getItem } from '../../../utils/secureStore';
 export const NavBar = () => {
-	const Tab = createBottomTabNavigator();
+	const dispatch = useDispatch();
 
+	useEffect(() => {
+		//проверка входа во время запуска приложения
+		async function userAuth() {
+			try {
+				const token = await getItem('token');
+				if (token) {
+					const user = await request('/user/auth', 'POST', { token: token });
+					if (user) {
+						dispatch({ type: 'LOGIN', payload: user });
+					}
+				}
+			} catch (error) {
+				console.log('userAuth: ', error);
+			}
+		}
+		userAuth();
+	}, []);
+
+	const Tab = createBottomTabNavigator();
 	const screenRoutes = {
-		Home: 'Home',
+		Main: 'Main',
 		Discover: 'Discover',
 		Profile: 'Profile',
 	};
@@ -25,16 +47,18 @@ export const NavBar = () => {
 			}}
 		>
 			<Tab.Screen
-				name={screenRoutes.Home}
-				component={Home}
+				name={screenRoutes.Main}
+				component={Main}
 				options={({ navigation }) => ({
 					tabBarShowLabel: false,
 					tabBarButton: (props) => (
 						<ActionButton
 							{...props}
+							font={'Icons'}
 							icon={NAVBAR_BUTTON_ROSTER}
-							onPress={() => navigation.navigate(screenRoutes.Home)}
-							type={'TabBarButton'}
+							onPress={() => navigation.navigate(screenRoutes.Main)}
+							animation={'grow'}
+							type={'tabBarButton'}
 							color={{
 								focused: '#F08080',
 								unfocused: 'rgb(15, 187, 232)',
@@ -51,9 +75,13 @@ export const NavBar = () => {
 					tabBarButton: (props) => (
 						<ActionButton
 							{...props}
+							font={'Icons'}
 							icon={NAVBAR_BUTTON_DISCOVER}
-							onPress={() => navigation.navigate(screenRoutes.Discover)}
-							type={'TabBarButton'}
+							onPress={() => {
+								navigation.navigate(screenRoutes.Discover);
+							}}
+							animation={'grow'}
+							type={'tabBarButton'}
 							color={{
 								focused: '#F08080',
 								unfocused: 'rgb(15, 187, 232)',
@@ -70,9 +98,11 @@ export const NavBar = () => {
 					tabBarButton: (props) => (
 						<ActionButton
 							{...props}
+							font={'Icons'}
 							icon={NAVBAR_BUTTON_PROFILE}
 							onPress={() => navigation.navigate(screenRoutes.Profile)}
-							type={'TabBarButton'}
+							animation={'grow'}
+							type={'tabBarButton'}
 							color={{
 								focused: '#F08080',
 								unfocused: 'rgb(15, 187, 232)',

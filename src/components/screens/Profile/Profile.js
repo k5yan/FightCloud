@@ -1,137 +1,56 @@
-import { View, Image, Text } from 'react-native';
+import { View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
-import { ActionButton } from '../../baseComponents/ActionButton';
-import { ACTION_BUTTON_SETTINGS, PROFILE_BUTTON_COLOR } from '../../../constants/icons';
-import { profileImagePath } from '../../../constants/imagePath/profileImagePath';
-import { TabSelector } from '../../baseComponents/TabSelector';
-import { PublicationsList } from '../../baseComponents/PublicationsList/PublicationsList';
+import {
+	profileImagePath,
+	defaultProfileImagePath,
+} from '../../../constants/imagePath/profileImagePath';
 import { ProfileHeader } from './ProfileHeader/ProfileHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectMainScreenStyles,
+	selectProfileInfo,
+} from '../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
+import { useEffect, useState } from 'react';
+import { getItem } from '../../../utils/secureStore';
+import { request } from '../../../utils/serverCalls/request';
+import { MidScreen } from './MidScreen/MidScreen';
 
 export const Profile = () => {
-	const profileColorPalette = {
-		alpha: '#008080', //фон
-		beta: '#006060', //фон публикаций
-		gamma: 'white', //текст, кнопки
-		delta: '#2F2F2F', //фон никнейма автора
-	};
+	const dispatch = useDispatch();
+	const user = useSelector(selectProfileInfo).nickname;
 
-	const Data = () => <View style={styles.data}></View>;
-	const Publications = () => <PublicationsList colorPalette={profileColorPalette} />;
-	const screens = [
-		{
-			name: 'posts',
-			component: Publications,
-		},
-		{
-			name: 'data',
-			component: Data,
-		},
-	];
+	useEffect(() => {
+		async function start() {
+			const token = await getItem('token');
+			if (user && token) {
+				const publications = await request('/user/publications', 'POST', {
+					token: token,
+				});
+				console.log(publications.data.publications);
+				dispatch({
+					type: 'DOWNLOAD_USER_PUBLICATIONS',
+					payload: publications.data.publications,
+				});
+			}
+		}
+		start();
+	}, []);
 
-	const profileInfo = {
-		nickname: 'k5yan',
-		title: 'platform: PC yoshimitsu player',
-	};
+	const mainScreen = useSelector(selectMainScreenStyles);
+	const styles = ScaledSheet.create(mainScreen);
+	const profileInfo = useSelector(selectProfileInfo);
 
 	return (
 		<View style={styles.profileContainer}>
 			<View style={styles.profileInfo}>
 				<ProfileHeader
-					colorPalette={profileColorPalette}
-					profileImagePath={profileImagePath}
+					profileImagePath={
+						profileInfo.isLogin ? profileImagePath : defaultProfileImagePath
+					}
 					profileInfo={profileInfo}
 				/>
 			</View>
-			<View style={styles.contentPicker}>
-				<TabSelector
-					backgroundColor={profileColorPalette.beta}
-					labelColor={{
-						focused: profileColorPalette.gamma,
-						unfocused: profileColorPalette.delta,
-					}}
-					screens={screens}
-				/>
-			</View>
+			<MidScreen />
 		</View>
 	);
 };
-
-const styles = ScaledSheet.create({
-	profileContainer: {
-		flex: 1,
-		backgroundColor: '#4d605e',
-	},
-	profileHeader: {
-		backgroundColor: '#008080',
-		borderWidth: '4@s',
-		borderBottomLeftRadius: 20,
-		borderBottomRightRadius: 20,
-		borderColor: '#008080',
-		flexDirection: 'row',
-		alignItems: 'flex-start',
-		justifyContent: 'space-between',
-		paddingTop: '36@s',
-		paddingBottom: '12@s',
-		paddingHorizontal: '12@s',
-	},
-	profilePictureContainer: {
-		backgroundColor: 'white',
-		width: '96@s',
-		height: '96@s',
-		borderWidth: '5@s',
-		borderRadius: 10,
-		borderColor: 'white',
-		justifyContent: 'center',
-		alignItems: 'cecnter',
-	},
-	profilePicture: {
-		width: '100%',
-		height: '100%',
-		borderRadius: 6,
-	},
-	profileNickname: {
-		fontFamily: 'PixyFont',
-		fontSize: '36@s',
-		color: 'white',
-	},
-	profileNicknameContainer: {
-		backgroundColor: '#2F2F2F',
-		borderWidth: '2@s',
-		borderRadius: 10,
-		borderColor: '#2F2F2F',
-		paddingLeft: '6@s',
-		paddingRight: '2@s',
-		paddingVertical: '2@s',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	profileTitle: {
-		fontFamily: 'PixyFont',
-		fontSize: '16@s',
-		color: 'white',
-	},
-	profileTitleContainer: {
-		width: '150@s',
-		marginTop: '5@s',
-	},
-	infoBox: {
-		height: '96@s',
-		justifyContent: 'space-between',
-		alignItems: 'flex-start',
-		marginLeft: '10@s',
-	},
-	playerContainer: {
-		flexDirection: 'row',
-	},
-	profileButtonContainer: {
-		alignItems: 'flex-end',
-	},
-	/////////
-	profileInfo: {
-		backgroundColor: '#006060',
-	},
-	contentPicker: {
-		flex: 1,
-		backgroundColor: '#006060',
-	},
-});

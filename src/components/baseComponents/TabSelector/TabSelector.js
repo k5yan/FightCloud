@@ -1,17 +1,21 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { ScaledSheet } from 'react-native-size-matters';
 import { TabLabel } from './TabLabel';
+import { useSelector } from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
 export const TabSelector = (props) => {
+	const colorPalette = useSelector(
+		(state) => state.styles[`${props.screen}Styles`].colorPalette,
+	);
+
 	return (
 		<Tab.Navigator
 			screenOptions={{
-				tabBarStyle: { backgroundColor: props.backgroundColor },
+				tabBarStyle: { backgroundColor: colorPalette.beta },
 				tabBarPressColor: 'transparent',
 				tabBarIndicatorStyle: {
-					backgroundColor: 'white',
+					backgroundColor: colorPalette.gamma,
 				},
 			}}
 		>
@@ -24,9 +28,9 @@ export const TabSelector = (props) => {
 						options={{
 							tabBarLabel: ({ focused }) => (
 								<TabLabel
+									colorPalette={colorPalette}
 									focused={focused}
 									label={List.name}
-									color={props.labelColor}
 								/>
 							),
 						}}
@@ -36,15 +40,3 @@ export const TabSelector = (props) => {
 		</Tab.Navigator>
 	);
 };
-
-const styles = ScaledSheet.create({
-	data: {
-		backgroundColor: '#006060',
-		flex: 1,
-	},
-	tabbarLabel: {
-		fontFamily: 'PixyFont',
-		fontSize: '20@s',
-		color: 'white',
-	},
-});

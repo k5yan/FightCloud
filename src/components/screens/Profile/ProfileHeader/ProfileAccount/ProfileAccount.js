@@ -5,14 +5,8 @@ import { View } from 'react-native';
 export const ProfileAccount = (props) => {
 	return (
 		<View style={{ flexDirection: 'row' }}>
-			<ProfileImage
-				colorPalette={props.colorPalette}
-				profileImagePath={props.profileImagePath}
-			/>
-			<ProfileInfo
-				colorPalette={props.colorPalette}
-				profileInfo={props.profileInfo}
-			/>
+			<ProfileImage profileImagePath={props.profileImagePath} />
+			<ProfileInfo profileInfo={props.profileInfo} />
 		</View>
 	);
 };
