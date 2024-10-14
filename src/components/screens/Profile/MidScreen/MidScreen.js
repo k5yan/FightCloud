@@ -5,22 +5,32 @@ import { LoginForm } from './LoginForm/LoginForm';
 import {
 	selectMainScreenStyles,
 	selectProfileInfo,
-	selectProfilePublications,
+	selectColorPalette,
 } from '../../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
+import { selectUserPublications } from '../../../../redux/selectors/data/publicationSelectors/publicationSelectors';
 import { useSelector } from 'react-redux';
 import { ScaledSheet } from 'react-native-size-matters';
+import { Cap } from '../../../baseComponents/PublicationsList/Cap/Cap';
+
+// const styles = ScaledSheet.create({
+// 	screen: {
+// 		flex: 1,
+// 		paddingTop: '4@s',
+// 		backgroundColor: colorPalette.alpha,
+// 	},
+// });
+const Data = () => (
+	<View style={{ flex: 1, paddingTop: 4, backgroundColor: 'green' }}>
+		<Cap textColor={'yellow'} capText={'your data files'} />
+	</View>
+);
+
+const UserPublications = () => (
+	<Publications contentSelector={selectUserPublications} placeholder={'say hi!'} />
+);
 
 export const MidScreen = () => {
-	const mainScreen = useSelector(selectMainScreenStyles);
 	const isLogin = useSelector(selectProfileInfo).isLogin;
-	const styles = ScaledSheet.create(mainScreen);
-	const Data = () => <View style={styles.data}></View>; //временно
-	const UserPublications = () => (
-		<Publications
-			contentSelector={selectProfilePublications}
-			placeholder={'say hi!'}
-		/>
-	);
 
 	const screens = [
 		{
@@ -33,6 +43,5 @@ export const MidScreen = () => {
 		},
 	];
 
-	// return isLogin ? <TabSelector screen={'Profile'} screens={screens} /> : <LoginForm />;
-	return <TabSelector screen={'Profile'} screens={screens} />;
+	return isLogin ? <TabSelector screen={'Profile'} screens={screens} /> : <LoginForm />;
 };

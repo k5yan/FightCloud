@@ -5,6 +5,7 @@ export const ProfileStyles = {
 			backgroundColor: '#4d605e',
 		},
 		profileInfo: {
+			zIndex: 2,
 			backgroundColor: '#006060',
 		},
 		contentPicker: {
@@ -20,7 +21,7 @@ export const ProfileStyles = {
 			flexDirection: 'row',
 			alignItems: 'flex-start',
 			justifyContent: 'space-between',
-			paddingTop: '36@s',
+			paddingTop: '4@s',
 			paddingBottom: '12@s',
 			paddingHorizontal: '12@s',
 		},
@@ -68,7 +69,7 @@ export const ProfileStyles = {
 			borderWidth: '5@s',
 			borderRadius: 10,
 			justifyContent: 'center',
-			alignItems: 'cecnter',
+			alignItems: 'center',
 		},
 		profilePicture: {
 			width: '100%',

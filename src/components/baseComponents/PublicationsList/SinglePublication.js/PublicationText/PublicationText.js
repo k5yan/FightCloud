@@ -3,26 +3,19 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { useState } from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { ActionButton } from '../../../ActionButton';
-import { ACTION_BUTTON_SEND } from '../../../../../constants/icons';
-import { request } from '../../../../../utils/serverCalls/request';
-import { updatePublications } from '../../../../../utils/updatePublications';
-import { useDispatch } from 'react-redux';
-import { getItem } from '../../../../../utils/secureStore';
+import {
+	ACTION_BUTTON_COMPLETE,
+	ACTION_BUTTON_CANCEL,
+} from '../../../../../constants/icons';
+import editPublication from './editPublication/editPublication';
+import { useToast } from 'react-native-toast-notifications';
 
 export const PublicationText = (props) => {
-	const dispatch = useDispatch();
 	const [textValue, setTextValue] = useState(props.text);
+	const startValue = props.text;
 
-	const SavePublication = async () => {
-		const token = await getItem('token');
-		console.log(token);
-		if (token) {
-			await request(`/publications/${props.id}`, 'PATCH', {
-				publication: { text: textValue },
-				token: token,
-			});
-			await updatePublications(dispatch);
-		}
+	const cancelEdit = () => {
+		setTextValue(startValue);
 	};
 
 	const styleChanger = {
@@ -35,6 +28,7 @@ export const PublicationText = (props) => {
 			publicationText: styles.publicationText,
 		},
 	};
+	const toast = useToast();
 
 	return (
 		<Animated.View
@@ -64,19 +58,45 @@ export const PublicationText = (props) => {
 				editable={props.editing}
 			/>
 			{props.editing && (
-				<ActionButton
-					icon={ACTION_BUTTON_SEND}
-					color={props.colorPalette.gamma}
-					font={'Icons'}
-					onPress={async () => {
-						try {
-							SavePublication();
-						} catch (error) {
-							console.log('ACTION_BUTTON_SUBMIT_EDIT: ', error);
-						}
-					}}
-					animation={'grow'}
-				/>
+				<View>
+					<View>
+						<ActionButton
+							icon={ACTION_BUTTON_COMPLETE}
+							color={props.colorPalette.gamma}
+							font={'Icons'}
+							onPress={async () => {
+								try {
+									textValue.trim() !== startValue &&
+										editPublication(
+											textValue,
+											props.id,
+											toast,
+											props.colorPalette,
+										);
+									props.edit();
+								} catch (error) {
+									console.log('ACTION_BUTTON_COMPLETE_EDIT: ', error);
+								}
+							}}
+							animation={'grow'}
+						/>
+					</View>
+					<View style={styles.cancelButton}>
+						<ActionButton
+							icon={ACTION_BUTTON_CANCEL}
+							color={props.colorPalette.gamma}
+							font={'Icons'}
+							onPress={async () => {
+								try {
+									cancelEdit();
+								} catch (error) {
+									console.log('ACTION_BUTTON_CANCEL_EDIT: ', error);
+								}
+							}}
+							animation={'grow'}
+						/>
+					</View>
+				</View>
 			)}
 		</Animated.View>
 	);
@@ -88,32 +108,36 @@ const styles = ScaledSheet.create({
 		flexDirection: 'row',
 		borderWidth: '2@s',
 		borderRadius: 10,
-		marginVertical: '6@s',
-		paddingVertical: '4@s',
-		paddingRight: '4@s',
+		marginVertical: '8@s',
+		paddingVertical: '6@s',
+		paddingRight: '6@s',
 		paddingLeft: '6@s',
-		justifyContent: 'center',
+		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
-		// alignItems: 'bottom',
+		overflow: 'hidden',
 	},
 	publicationEditingText: {
 		flex: 1,
 		fontFamily: 'sans-serif-medium',
-		fontSize: '16@s',
+		fontSize: '15@s',
 		textAlignVertical: 'top',
 		textAlign: 'left',
 	},
 	publicationTextContainer: {
-		paddingVertical: '6@s',
-		paddingHorizontal: '4@s',
-		marginVertical: '4@s',
+		paddingTop: '6@s',
+		paddingLeft: '8@s',
+		marginTop: '8@s',
+		marginBottom: '24@s',
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
+		overflow: 'hidden',
 	},
 	publicationText: {
-		// color: 'white',
-
 		fontFamily: 'sans-serif-medium',
-		fontSize: '16@s',
+		fontSize: '15@s',
+	},
+	cancelButton: {
+		marginTop: '6@s',
+		// marginRight: '2@s',
 	},
 });

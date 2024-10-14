@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { AuthorInfo } from './AuthorInfo';
-import { PublicationDropDown } from './PublicationDropDown/PublicationDropDown';
+// import { PublicationDropDown } from './PublicationDropDown/PublicationDropDown';
+import { PublicationDropDown } from '../../../PublicationDropDown/PublicationDropDown';
 import Animated, { Easing, LinearTransition } from 'react-native-reanimated';
 
 export const PublicationHeader = (props) => {
@@ -14,8 +15,9 @@ export const PublicationHeader = (props) => {
 			<PublicationDropDown
 				edit={props.edit}
 				colorPalette={props.colorPalette}
-				id={props.id}
-				author={props.author.nickname}
+				publicationId={props.id}
+				authorId={props.author.id}
+				type={props.type}
 			/>
 		</Animated.View>
 	);
@@ -26,5 +28,6 @@ const styles = ScaledSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
+		zIndex: 2,
 	},
 });

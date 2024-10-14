@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { RosterList } from './RosterList';
 import { CloudPanel } from './CloudPanel';
@@ -7,7 +7,7 @@ import {
 	selectMainScreenStyles,
 	selectColorPalette,
 } from '../../../redux/selectors/styles/MainSelectors/MainSelectors';
-
+import safeArea from '../../../utils/safeArea/safeArea';
 export const Main = () => {
 	const mainScreen = useSelector(selectMainScreenStyles);
 	const colorPalette = useSelector(selectColorPalette);
@@ -15,9 +15,15 @@ export const Main = () => {
 	const styles = ScaledSheet.create(mainScreen);
 
 	return (
-		<View style={[{ backgroundColor: colorPalette.alpha }, styles.main]}>
+		<SafeAreaView
+			style={[
+				{ backgroundColor: colorPalette.alpha },
+				styles.main,
+				safeArea(colorPalette.alpha).style,
+			]}
+		>
 			<CloudPanel />
 			<RosterList />
-		</View>
+		</SafeAreaView>
 	);
 };

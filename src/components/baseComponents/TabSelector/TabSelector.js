@@ -18,6 +18,8 @@ export const TabSelector = (props) => {
 					backgroundColor: colorPalette.gamma,
 				},
 			}}
+			unmountOnBlur={false}
+			removeClippedSubviews={false}
 		>
 			{props.screens.map((List) => {
 				return (

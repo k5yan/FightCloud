@@ -1,12 +1,11 @@
 import * as HTML_Entity from 'he';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ScaledSheet } from 'react-native-size-matters';
 import { Animations } from '../Animations';
 
 export const ActionButton = (props) => {
 	const Animation = Animations();
-
 	const buttonType = props.type || 'default';
 	const focused =
 		buttonType === 'tabBarButton' ? props.accessibilityState.selected : false;
@@ -16,12 +15,18 @@ export const ActionButton = (props) => {
 		default: styles.defaultButtonContainer,
 		tabBarButton: styles.navBarButtonContainer,
 		submitButton: styles.submitButtonContainer,
+		smallButton: styles.defaultButtonContainer,
+		middleButton: styles.defaultButtonContainer,
+		invertMiddleButton: styles.defaultButtonContainer,
 	};
 
 	const textStyle = {
 		default: styles.defaultIcon,
 		tabBarButton: styles.navBarIcon,
 		submitButton: styles.defaultIcon,
+		smallButton: styles.smallIcon,
+		middleButton: styles.middleIcon,
+		invertMiddleButton: styles.invertMiddleIcon,
 	};
 
 	const labelColor =
@@ -60,7 +65,7 @@ export const ActionButton = (props) => {
 	);
 };
 
-let styles = ScaledSheet.create({
+const styles = ScaledSheet.create({
 	navBarButtonContainer: {
 		flex: 1,
 		alignItems: 'center',
@@ -77,7 +82,6 @@ let styles = ScaledSheet.create({
 	},
 	defaultIcon: {
 		fontSize: '25@s',
-		fontFamily: 'Icons',
 	},
 	submitButtonContainer: {
 		backgroundColor: '#2F2F2F',
@@ -89,6 +93,16 @@ let styles = ScaledSheet.create({
 		paddingVertical: '3@s',
 		marginVertical: '2@s',
 		marginHorizontal: '60@s',
+	},
+	smallIcon: {
+		fontSize: '14@s',
+	},
+	middleIcon: {
+		fontSize: '18@s',
+	},
+	invertMiddleIcon: {
+		fontSize: '18@s',
+		transform: [{ rotateY: '180deg' }],
 	},
 	navBarIconT: {
 		fontSize: '25@s',

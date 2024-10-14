@@ -1,1 +1,2 @@
-export const selectAllPublications = (state) => state.publications.allPublications;
+export const selectDiscoverPublications = (state) =>
+	state.publications.discoverPublications;

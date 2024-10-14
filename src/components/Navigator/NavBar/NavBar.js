@@ -7,9 +7,9 @@ import {
 	NAVBAR_BUTTON_DISCOVER,
 	NAVBAR_BUTTON_PROFILE,
 } from '../../../constants/icons';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { request } from '../../../utils/serverCalls/request';
+import { postCall as auth } from '../../../utils/serverCalls';
 import { getItem } from '../../../utils/secureStore';
 export const NavBar = () => {
 	const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export const NavBar = () => {
 			try {
 				const token = await getItem('token');
 				if (token) {
-					const user = await request('/user/auth', 'POST', { token: token });
+					const user = await auth('/user/auth', { token: token });
 					if (user) {
 						dispatch({ type: 'LOGIN', payload: user });
 					}
@@ -44,6 +44,7 @@ export const NavBar = () => {
 			screenOptions={{
 				headerShown: false,
 				tabBarStyle: styles.navBarContainer,
+				tabBarHideOnKeyboard: true,
 			}}
 		>
 			<Tab.Screen

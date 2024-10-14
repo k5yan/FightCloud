@@ -8,11 +8,11 @@ import {
 } from '../../../../redux/selectors/styles/ProfileSelectors/ProfileSelectors';
 import { useSelector } from 'react-redux';
 
-export const ProfileHeader = (props) => {
+export const ProfileHeader = () => {
 	const headerStyles = useSelector(selectHeaderStyles);
 	const colorPalette = useSelector(selectColorPalette);
-
 	const styles = ScaledSheet.create(headerStyles);
+
 	return (
 		<View
 			style={[
@@ -23,10 +23,7 @@ export const ProfileHeader = (props) => {
 				styles.profileHeader,
 			]}
 		>
-			<ProfileAccount
-				profileImagePath={props.profileImagePath}
-				profileInfo={props.profileInfo}
-			/>
+			<ProfileAccount />
 		</View>
 	);
 };

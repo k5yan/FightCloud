@@ -1,6 +1,7 @@
 const dataBaseInitialState = {
 	id: '',
-	nickname: 'guest',
+	avatar: '',
+	login: 'guest',
 	role: 0,
 	title: '',
 	isLogin: false,
@@ -17,13 +18,21 @@ export const profileInfoReducer = (state = dataBaseInitialState, action) => {
 			return {
 				...state,
 				id: action.payload.id,
-				nickname: action.payload.login,
+				avatar: action.payload.avatar,
+				login: action.payload.login,
+				title: action.payload.title,
 				role: action.payload.role,
 				isLogin: true,
 			};
 		}
 		case 'LOGOUT': {
 			return dataBaseInitialState;
+		}
+		case 'EDIT_USER': {
+			return {
+				...state,
+				...action.payload, //передается по разному сформированный объект
+			};
 		}
 		case 'DOWNLOAD_USER_PUBLICATIONS': {
 			return {

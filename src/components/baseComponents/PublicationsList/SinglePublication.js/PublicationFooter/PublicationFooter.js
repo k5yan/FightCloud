@@ -1,52 +1,42 @@
+import Animated, { LinearTransition, Easing } from 'react-native-reanimated';
 import { View, Text } from 'react-native';
-import { ActionButton } from '../../../ActionButton';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { ScaledSheet } from 'react-native-size-matters';
+import { ActionButton } from '../../../ActionButton';
+import { DOWNLOAD_COMMENTS } from '../../../../../redux/actions/publicationActions';
+import { getItem } from '../../../../../utils/secureStore';
+import {
+	postCall as getData,
+	postCall as sendLike,
+} from '../../../../../utils/serverCalls';
 import {
 	ACTION_BUTTON_COMMENTS,
 	ACTION_BUTTON_FAVORITE,
 	ACTION_BUTTON_FAVORITE_FILL,
 } from '../../../../../constants/icons';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { getItem } from '../../../../../utils/secureStore';
-import { request } from '../../../../../utils/serverCalls/request';
-import { updatePublications } from '../../../../../utils/updatePublications';
-import Animated, { LinearTransition, Easing } from 'react-native-reanimated';
-import { useNavigation } from '@react-navigation/native';
-import { SinglePublicationOpen } from '../SinglePublicationOpen';
 
 export const PublicationFooter = (props) => {
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const [isLike, setIsLike] = useState(props.publication.likedByUser);
-	const [likes, setLikes] = useState(props.publication.likes);
-
-	const handleLike = async () => {
-		const token = await getItem('token');
-
-		if (token) {
-			await request(`/publications/${props.publication.id}/like`, 'POST', {
-				token: token,
-			});
-			// await updatePublications(dispatch);
-		}
-		setIsLike(!isLike);
-	};
 
 	return (
 		<Animated.View layout={LinearTransition} style={styles.footerContainer}>
 			<View style={styles.microInfoContainer}>
 				<ActionButton
-					icon={isLike ? ACTION_BUTTON_FAVORITE_FILL : ACTION_BUTTON_FAVORITE}
-					color={isLike ? '#CD5C5C' : props.colorPalette.gamma}
+					icon={
+						props.likes.isLikedByUser
+							? ACTION_BUTTON_FAVORITE_FILL
+							: ACTION_BUTTON_FAVORITE
+					}
+					color={
+						props.likes.isLikedByUser ? '#CD5C5C' : props.colorPalette.gamma
+					}
 					font={'Icons'}
 					onPress={async () => {
 						try {
-							await handleLike();
-							if (isLike) {
-								setLikes(likes - 1);
-							} else {
-								setLikes(likes + 1);
-							}
+							await props.likes.set();
 						} catch (error) {
 							console.log(error);
 						}
@@ -54,7 +44,7 @@ export const PublicationFooter = (props) => {
 					animation={'grow'}
 				/>
 				<Text style={[styles.counter, { color: props.colorPalette.gamma }]}>
-					{likes}
+					{props.likes.amount}
 				</Text>
 			</View>
 			<View style={styles.microInfoContainer}>
@@ -64,16 +54,23 @@ export const PublicationFooter = (props) => {
 					font={'Icons'}
 					onPress={async () => {
 						try {
-							const comments = await request(
-								`/publications/${props.publication.id}/comments`,
-								'POST',
-								{ commentIds: props.publication.comments },
-							);
-							navigation.navigate('Publication', {
-								colorPalette: props.colorPalette,
-								publication: props.publication,
-								comments: comments,
-							});
+							const token = await getItem('token');
+							if (token) {
+								navigation.navigate('Publication', {
+									colorPalette: props.colorPalette,
+									publicationData: {
+										id: props.publication.id,
+										authorId: props.publication.authorId,
+									},
+									// publication: publication,
+									type: props.type,
+									handleLikeParent: async () => await props.likes.set(),
+									handleCommentsParent: (amount) =>
+										props.comments.set(amount),
+									//добавить toast в момент удаления, создания, редактирования
+									//перейти к созданию экрана с другим юзером
+								});
+							}
 						} catch (error) {
 							console.log(error);
 						}
@@ -81,7 +78,7 @@ export const PublicationFooter = (props) => {
 					animation={'grow'}
 				/>
 				<Text style={[styles.counter, { color: props.colorPalette.gamma }]}>
-					{props.publication.comments.length}
+					{props.comments.amount}
 				</Text>
 			</View>
 		</Animated.View>

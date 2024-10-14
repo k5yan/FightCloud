@@ -21,21 +21,37 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "filesystem",
+        "INTERNET"
+      ],
+      "StatusBar": {
+        "style": "dark-content",
+        "hidden": false,
+        "translucent": true
+      },
+      "package": "com.anonymous.FightCloud"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "expo-font",
+        "expo-font"
+      ],
+      [
+        "expo-build-properties",
         {
-          "fonts": [
-            "./src/assets/fonts/icons.ttf"
-          ]
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-asset"
     ]
   }
 }

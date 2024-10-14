@@ -1,107 +1,100 @@
+import { useEffect, useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import { ScaledSheet } from 'react-native-size-matters';
+import { PublicationOpenHeader } from './PublicationOpenHeader';
 import { PublicationHeader } from './PublicationHeader';
 import { PublicationText } from './PublicationText';
-import { PublicationImage } from './PublicationImage/PublicationImage';
-import { yoshimitsuArtPath } from '../../../../constants/imagePath/publicationsPath/publicationsPath';
-import { profileImagePath } from '../../../../constants/imagePath/profileImagePath';
-import { useState } from 'react';
-import Animated, { LinearTransition } from 'react-native-reanimated';
-import { ScrollView, View, Text } from 'react-native';
+import { PublicationContent } from './PublicationContent';
+import { PublicationOpenFooter } from './PublicationOpenFooter';
 import { PublicationComments } from './PublicationComments';
-import { ActionButton } from '../../ActionButton';
-import { ACTION_BUTTON_BURGER } from '../../../../constants/icons';
-import { PublicationFooterOpen } from './PublicationFooterOpen/PublicationFooterOpen';
-
+import { Bar } from '../../Bar/Bar';
+import { postCall as getData } from '../../../../utils/serverCalls';
+import { getItem } from '../../../../utils/secureStore';
+import { PublicationOpenLoader } from './PublicationOpenLoader';
+import { PublicationOpen } from './PublicationOpen/PublicationOpen';
+import safeArea from '../../../../utils/safeArea/safeArea';
+import { useDispatch } from 'react-redux';
+import { DOWNLOAD_COMMENTS } from '../../../../redux/actions/publicationActions';
 export const SinglePublicationOpen = (props) => {
-	const colorPalette = props.route.params.colorPalette;
-	const publication = props.route.params.publication;
-	const comments = props.route.params.comments;
+	const [publication, setPublication] = useState(null);
+	const [publicationloaded, setPublicationLoaded] = useState(false);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		async function donwloadCurrentPublication() {
+			try {
+				const token = await getItem('token');
+				if (token) {
+					const publicationId = props.route.params.publicationData.id;
+					const authorId = props.route.params.publicationData.authorId;
+					const publication = await getData(`/publications/${publicationId}`, {
+						authorId: authorId,
+						token: token,
+					});
+					setPublication(publication);
+					// setIsLike(publication.likedByUser);
+					// setLikes(publication.likes);
+					// setComments(publication.comments.length);
+					dispatch(DOWNLOAD_COMMENTS(publication.comments));
+				}
+			} catch (error) {
+				console.log('download publication error', error);
+			} finally {
+				setTimeout(() => setPublicationLoaded(true), 100);
+				//setPublicationLoaded(true);
+			}
+		}
+		donwloadCurrentPublication();
+	}, []);
 
-	const [isEditing, setIsEditing] = useState(false);
-	const handleEditing = () => {
-		setIsEditing(!isEditing);
-	};
+	const colorPalette = props.route.params.colorPalette;
+	const type = props.route.params.type;
+	const handleLikeParent = props.route.params.handleLikeParent;
+	const handleCommentsParent = props.route.params.handleCommentsParent;
+
 	return (
-		<View style={{ backgroundColor: colorPalette.beta, flex: 1 }}>
-			<View style={[styles.headerContainer, { borderColor: colorPalette.alpha }]}>
-				<View style={styles.headerButtonContainer}>
-					<ActionButton
-						icon={ACTION_BUTTON_BURGER}
-						color={colorPalette.gamma}
-						font={'Icons'}
-						onPress={async () => {
-							try {
-							} catch (error) {
-								console.log('ACTION_BUTTON_SEND: ', error);
-							}
-						}}
-						animation={'grow'}
-					/>
-				</View>
-				<View style={styles.headerTextContainer}>
-					<Text style={styles.headerText}>{'Publication'}</Text>
-				</View>
-			</View>
-			<ScrollView contentContainerStyle={{ backgroundColor: colorPalette.beta }}>
+		<SafeAreaView
+			style={[
+				safeArea(colorPalette.beta).style,
+				{ backgroundColor: colorPalette.beta, flex: 1 },
+			]}
+		>
+			<PublicationOpenHeader colorPalette={colorPalette} />
+			{!publicationloaded && <PublicationOpenLoader colorPalette={colorPalette} />}
+			{publication && (
+				<PublicationOpen
+					publication={publication}
+					colorPalette={colorPalette}
+					type={type}
+					handleLikeParent={handleLikeParent}
+					handleCommentsParent={handleCommentsParent}
+					isLoaded={publicationloaded}
+				/>
+			)}
+			{publicationloaded && (
 				<Animated.View
+					style={[styles.barContainer, { borderColor: colorPalette.alpha }]}
 					layout={LinearTransition}
-					style={[
-						{ backgroundColor: colorPalette.beta },
-						styles.publicationContainer,
-					]}
 				>
-					<PublicationHeader
-						id={publication.id}
+					<Bar
+						placeholder={'type...'}
 						colorPalette={colorPalette}
-						author={{ nickname: publication.author, image: profileImagePath }}
-						edit={handleEditing}
-					/>
-					<PublicationText
-						id={publication.id}
-						colorPalette={colorPalette}
-						text={publication.text}
-						editing={isEditing}
-					/>
-					<PublicationImage imagePath={yoshimitsuArtPath} />
-					<PublicationFooterOpen
-						// id={publication.id}
-						colorPalette={colorPalette}
-						// comments={publication.comments}
-						// likes={publication.likes}
-						// likedByUser={publication.likedByUser}
-						publication={publication}
+						type={'comment'}
+						publicationId={publication.id}
 					/>
 				</Animated.View>
-				<PublicationComments comments={comments} colorPalette={colorPalette} />
-			</ScrollView>
-		</View>
+			)}
+		</SafeAreaView>
 	);
 };
 
-///вставить бар для ввода, найти дополнительные иконки
 const styles = ScaledSheet.create({
-	publicationContainer: {
-		paddingHorizontal: '6@s',
-		paddingVertical: '6@s',
-		// marginTop: '10@s',
-		marginHorizontal: '2@s',
-		borderRadius: 4,
-	},
-	headerContainer: {
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		marginTop: '40@s',
-		paddingBottom: '12@s',
-		flexDirection: 'row',
-		borderBottomWidth: '2@s',
-	},
-	headerTextContainer: {
-		// marginLeft: '8@s',
-		alignItems: 'flex-start',
-		justifyContent: 'center',
-	},
-	headerText: { fontFamily: 'PixyFont', fontSize: '25@s', color: '#fff' },
-	headerButtonContainer: {
-		marginHorizontal: '16@s',
+	barContainer: {
+		borderTopWidth: '2@s',
+		borderRightWidth: '2@s',
+		borderLeftWidth: '2@s',
+		borderTopRightRadius: 10,
+		borderTopLeftRadius: 10,
+		paddingBottom: '4@s',
 	},
 });

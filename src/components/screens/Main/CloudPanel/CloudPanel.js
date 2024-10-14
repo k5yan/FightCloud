@@ -2,7 +2,7 @@ import { ImageBackground, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ActionButton } from '../../../baseComponents/ActionButton';
 import { SearchBar } from './SearchBar';
-import { AppTitle } from '../../../baseComponents/AppTitle';
+import { ScreenTitle } from '../../../baseComponents/ScreenTitle';
 import { ScaledSheet } from 'react-native-size-matters';
 import {
 	selectColorPalette,
@@ -22,7 +22,7 @@ export const CloudPanel = () => {
 
 	return (
 		<View style={[{ backgroundColor: colorPalette.alpha }, styles.container]}>
-			<AppTitle title={'fightcloud'} />
+			<ScreenTitle title={'fightcloud'} />
 			<ImageBackground
 				source={require('../../../../image/HomeScreen/CloudBarBackground2.png')}
 				resizeMode="cover"

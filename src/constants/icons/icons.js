@@ -10,6 +10,12 @@ export const ACTION_BUTTON_SEARCH = '&#xe912;';
 export const ACTION_BUTTON_SEND = '&#xe913;';
 export const ACTION_BUTTON_DELETE = '&#xe901;';
 export const ACTION_BUTTON_REPORT = '&#xe914;';
+export const ACTION_BUTTON_CANCEL = '&#xe915;';
+export const ACTION_BUTTON_COMPLETE = '&#xe916;';
+export const ACTION_BUTTON_BACK = '&#xe917;';
+export const ACTION_BUTTON_LOGOUT = '&#xe918;';
+export const ACTION_BUTTON_RESET = '&#xe919;';
+export const ACTION_BUTTON_IMAGE = '&#xe920;';
 
 export const NAVBAR_BUTTON_ROSTER = '&#xe900;';
 export const NAVBAR_BUTTON_PROFILE = '&#xe904;';
